@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-kickoff = "researcher_agent:main"
+kickoff = "researcher_agent.main"
 
 [build-system]
 requires = ["hatchling"]

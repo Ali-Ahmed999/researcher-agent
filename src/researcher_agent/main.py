@@ -18,13 +18,6 @@ class ExampleFlow(Flow):
         )
          print(response['choices'][0]['message']['content'])
 
-
-
-        
-        
-        
-        
-        
 def kickoff():
     flow = ExampleFlow()
     flow.kickoff()
