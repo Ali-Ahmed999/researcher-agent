@@ -12,12 +12,13 @@ class ExampleFlow(Flow):
             messages=[
                 {
                     "role": "user",
-                    "content": "generate the name of a random city in the world.",
+                    "content": "generate the name of a random city in pakistan.",
                 },
             ],
         )
-         print(response['choices'][0]['message']['content'])
+         return response['choices'][0]['message']['content']
 
 def kickoff():
     flow = ExampleFlow()
-    flow.kickoff()
+    result = flow.kickoff()
+    print(result)
