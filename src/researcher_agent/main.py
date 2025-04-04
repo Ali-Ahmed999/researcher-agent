@@ -12,7 +12,7 @@ class ExampleFlow(Flow):
             messages=[
                 {
                     "role": "user",
-                    "content": "generate the name of a random city in pakistan.",
+                    "content": "generate any one topic of pakistans political issues.",
                 },
             ],
         )
@@ -26,4 +26,4 @@ class ExampleFlow(Flow):
 def kickoff():
     flow = ExampleFlow()
     result = flow.kickoff()
-    print(result)
+    print("flow outpur",result)
