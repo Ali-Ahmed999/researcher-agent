@@ -12,7 +12,7 @@ class ExampleFlow(Flow):
             messages=[
                 {
                     "role": "user",
-                    "content": "generate any one topic of pakistans political issues.",
+                    "content": "Generate a comprehensive topic focused on one of Pakistans political issues. Your topic should invite an analysis that covers the historical context, current challenges, and potential implications or solutions related to that issue.",
                 },
             ],
         )
