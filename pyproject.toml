@@ -11,6 +11,9 @@ dependencies = [
     "crewai>=0.108.0",
     "crewai-tools>=0.38.1",
     "litellm>=1.60.2",
+    "python-dotenv>=1.1.0",
+    "requests>=2.32.3",
+    "types-pyyaml>=6.0.12.20250402",
 ]
 
 [project.scripts]
