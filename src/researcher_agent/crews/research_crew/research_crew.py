@@ -5,7 +5,6 @@ import yaml
 from typing import Dict, Any
 from crewai import Agent, Crew, Task, Process  # type: ignore
 from crewai.project import CrewBase, agent, task, crew  # type: ignore
-from typing import Dict
 
 # Load environment variables
 load_dotenv()
@@ -35,11 +34,15 @@ class Research_Crew:
     tasks_config: Dict[str, Any]  # Explicitly declare the type
 
     def __init__(self):
+        # Define the paths to the configuration files
+        agents_path = os.path.join('config', 'agents.yaml')
+        tasks_path = os.path.join('config', 'tasks.yaml')
+
         # Load YAML configurations
-        with open('config/agents.yaml', 'r') as agents_file:
-            self.agents_config = yaml.safe_load(agents_file)  # Now MyPy knows this is a dict
-        with open('config/tasks.yaml', 'r') as tasks_file:
-            self.tasks_config = yaml.safe_load(tasks_file)  # Now MyPy knows this is a dict
+        with open(agents_path, 'r') as agents_file:
+            self.agents_config = yaml.safe_load(agents_file)  # Load agents configuration
+        with open(tasks_path, 'r') as tasks_file:
+            self.tasks_config = yaml.safe_load(tasks_file)  # Load tasks configuration
         
         # Initialize agents and tasks
         self.agents = [self.research_officer(), self.research_associate()]
