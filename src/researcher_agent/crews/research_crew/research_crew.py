@@ -34,9 +34,19 @@ class Research_Crew:
     tasks_config: Dict[str, Any]  # Explicitly declare the type
 
     def __init__(self):
+        # Define the base directory (relative to this file)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        config_dir = os.path.join(base_dir, 'config')
+
         # Define the paths to the configuration files
-        agents_path = os.path.join('config', 'agents.yaml')
-        tasks_path = os.path.join('config', 'tasks.yaml')
+        agents_path = os.path.join(config_dir, 'agents.yaml')
+        tasks_path = os.path.join(config_dir, 'tasks.yaml')
+
+        # Check if the files exist
+        if not os.path.exists(agents_path):
+            raise FileNotFoundError(f"Configuration file not found: {agents_path}")
+        if not os.path.exists(tasks_path):
+            raise FileNotFoundError(f"Configuration file not found: {tasks_path}")
 
         # Load YAML configurations
         with open(agents_path, 'r') as agents_file:
