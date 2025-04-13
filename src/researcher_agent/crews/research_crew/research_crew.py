@@ -12,7 +12,7 @@ class Research_Crew:
     def research_officer(self) -> Agent:
         return Agent(
             config=self.agents_config['research_officer'], # type: ignore
-            verbose=True,
+            verbose=False,
             llm="gemini/gemini-1.5-flash"
         )
         
@@ -22,7 +22,7 @@ class Research_Crew:
     def research_associate(self) -> Agent:
         return Agent(
             config=self.agents_config['research_associate'], # type: ignore
-            verbose=True,
+            verbose=False,
             llm="gemini/gemini-1.5-flash"
         )
         
@@ -49,9 +49,5 @@ class Research_Crew:
             agents=self.agents,  # type: ignore # Automatically collected by the @agent decorator
             tasks=self.tasks,  # type: ignore   # Automatically collected by the @task decorator. 
             process=Process.sequential,
-            verbose=True,
+            verbose=False,
         )
-        
-    
-    
-

@@ -1,18 +1,21 @@
 research_task:
   description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is 2025.
+    Conduct thorough research about the topic provided by the user.
+    Make sure to uncover the most relevant and interesting information.
+    Gather insights from credible sources and include a mix of historical context, current challenges, and potential future implications.
   expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
+    A list with 10 bullet points highlighting the most relevant and up-to-date information about the provided topic.
+    Each point should address a significant aspect of the topic, such as trends, key figures, challenges, or emerging opportunities.
   agent: research_officer
 
 reporting_task:
   description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Review the context gathered for the topic and expand each key point into a full section for a comprehensive report.
+    Ensure the report includes detailed, well-researched insights that are clear and actionable.
+    Make sure the report is suitable for someone looking to understand the topic in-depth, covering both the background and the present state.
   expected_output: >
-    A fully fledge reports with the mains topics, each with a full section of information.
-    Formatted as markdown without '```'
+    A fully fleshed-out report with clearly defined sections for each main point.
+    The report should be formatted in Markdown, with proper headings, subheadings, and supporting information.
+    The report should be easy to follow and should provide value to someone researching the topic in-depth.
   agent: research_associate
   output_file: report.md
