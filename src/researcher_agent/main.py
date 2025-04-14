@@ -4,7 +4,6 @@ from researcher_agent.crews.research_crew.research_crew import Research_Crew  # 
 
 class ExampleFlow(Flow):
     
-    
     @start()
     def start_researcher(self):
         user_topic = input("Please enter the topic you want to research: ")
@@ -19,20 +18,15 @@ class ExampleFlow(Flow):
         )
         return response['choices'][0]['message']['content']
    
-     
     @listen(start_researcher)
-    def research_work(self,update_topic):
-         crew = Research_Crew().crew().kickoff(inputs={"topic":update_topic})
-         return crew.raw
+    def research_work(self, update_topic):
+        crew = Research_Crew().crew().kickoff(inputs={"topic": update_topic})
+        return crew.raw
      
-     
-         
 def kickoff():
     flow = ExampleFlow()
     result = flow.kickoff()
-    print("Research output:",result)
-
-
+    print("Research output:", result)
 
 # Run the research process
 if __name__ == "__main__":
