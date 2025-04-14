@@ -28,6 +28,16 @@ def get_serper_data(topic: str) -> dict:
     
     return data
 
+# Function to replace {topic} placeholders in the YAML
+def replace_placeholders(config: Dict[str, Any], topic: str) -> Dict[str, Any]:
+    # Replace placeholders in the role, goal, and backstory
+    for key, value in config.items():
+        if isinstance(value, str):
+            config[key] = value.format(topic=topic)
+        elif isinstance(value, dict):
+            config[key] = replace_placeholders(value, topic)
+    return config
+
 @CrewBase
 class Research_Crew:
     agents_config: Dict[str, Any]  # Explicitly declare the type
@@ -51,8 +61,13 @@ class Research_Crew:
         # Load YAML configurations
         with open(agents_path, 'r') as agents_file:
             self.agents_config = yaml.safe_load(agents_file)  # Load agents configuration
+        
         with open(tasks_path, 'r') as tasks_file:
             self.tasks_config = yaml.safe_load(tasks_file)  # Load tasks configuration
+        
+        # Replace placeholders in agents config
+        topic = 'Pakistan Independence'  # Example topic, replace with dynamic input
+        self.agents_config = replace_placeholders(self.agents_config, topic)
         
         # Initialize agents and tasks
         self.agents = [self.research_officer(), self.research_associate()]
@@ -60,11 +75,19 @@ class Research_Crew:
 
     @agent
     def research_officer(self) -> Agent:
-        return Agent(config=self.agents_config['research_officer'], verbose=True, llm="gemini/gemini-1.5-flash")
+        return Agent(
+            config=self.agents_config['research_officer'],
+            verbose=True,
+            llm="gemini/gemini-1.5-flash"
+        )
 
     @agent
     def research_associate(self) -> Agent:
-        return Agent(config=self.agents_config['research_associate'], verbose=True, llm="gemini/gemini-1.5-flash")
+        return Agent(
+            config=self.agents_config['research_associate'],
+            verbose=True,
+            llm="gemini/gemini-1.5-flash"
+        )
 
     @task
     def research_task(self, topic: str) -> Task:
@@ -91,8 +114,17 @@ class Research_Crew:
         return Task(config=task_config)  # type: ignore
 
     @crew
-    def crew(self) -> Crew:
-        return Crew(agents=self.agents, tasks=self.tasks, process=Process.sequential, verbose=True)
+    def crew(self, topic: str) -> Crew:
+        # Ensure topic is passed to tasks dynamically
+        return Crew(
+            agents=self.agents,
+            tasks=[
+                self.research_task(topic),  # Pass topic to research_task
+                self.reporting_task(topic)   # Pass topic to reporting_task
+            ],
+            process=Process.sequential,
+            verbose=True
+        )
 
     def extract_relevant_info(self, serper_data: dict) -> list:
         relevant_info = []
