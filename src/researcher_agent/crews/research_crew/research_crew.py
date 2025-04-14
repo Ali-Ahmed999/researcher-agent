@@ -5,28 +5,13 @@ import yaml
 from typing import Dict, Any
 from crewai import Agent, Crew, Task, Process  # type: ignore
 from crewai.project import CrewBase, agent, task, crew  # type: ignore
+from crewai.tools import BaseTool # type: ignore
+from crewai_tools import SerperDevTool # type: ignore
 
-# Load environment variables
+google_search_tool = SerperDevTool()
+
 load_dotenv()
 
-# Define a function to query the Serper API for real-time search results
-def get_serper_data(topic: str) -> dict:
-    api_key = os.getenv("SERPER_API_KEY")  # Fetch the API key from the ENV file
-    if not api_key:
-        raise ValueError("API key not found. Please check your .env file.")
-    
-    search_url = f"https://api.serper.dev/search?q={topic}&api_key={api_key}"
-    response = requests.get(search_url)
-    
-    if response.status_code != 200:
-        raise ValueError(f"API request failed with status code {response.status_code}: {response.text}")
-    
-    try:
-        data = response.json()
-    except ValueError:
-        raise ValueError("Failed to decode JSON response from the API.")
-    
-    return data
 
 # Function to replace {topic} placeholders in the YAML
 def replace_placeholders(config: Dict[str, Any], topic: str) -> Dict[str, Any]:
@@ -90,37 +75,30 @@ class Research_Crew:
         )
 
     @task
-    def research_task(self, topic: str) -> Task:
+    def research_task(self) -> Task:
         task_config: Dict[str, str] = self.tasks_config['research_task']
-        task_config['description'] = f"Conduct thorough research about {topic}"
-        task_config['expected_output'] = f"A list with 10 bullet points about {topic}"
+        task_config['description'] = "Conduct thorough research about {topic}"
+        task_config['expected_output'] = "A list with 10 bullet points about {topic}"
         
-        serper_data = get_serper_data(topic)
-        relevant_info = self.extract_relevant_info(serper_data)
-        task_config['description'] += "\nRelevant search results:\n" + "\n".join(relevant_info)
-        
-        return Task(config=task_config)  # type: ignore
+        return Task(config=task_config, tools=[google_search_tool])  # type: ignore
 
     @task
-    def reporting_task(self, topic: str) -> Task:
+    def reporting_task(self) -> Task:
         task_config: Dict[str, str] = self.tasks_config['reporting_task']
-        task_config['description'] = f"Review the context you got for {topic} and expand each topic into a full section for a report."
-        task_config['expected_output'] = f"A fully fleshed-out report with sections about {topic}"
+        task_config['description'] = "Review the context you got for {topic} and expand each topic into a full section for a report."
+        task_config['expected_output'] = "A fully fleshed-out report with sections about {topic}"
         
-        serper_data = get_serper_data(topic)
-        relevant_info = self.extract_relevant_info(serper_data)
-        task_config['description'] += "\nRelevant search results:\n" + "\n".join(relevant_info)
         
-        return Task(config=task_config)  # type: ignore
+        return Task(config=task_config, tools=[google_search_tool])  # type: ignore
 
     @crew
-    def crew(self, topic: str) -> Crew:
+    def crew(self) -> Crew:
         # Ensure topic is passed to tasks dynamically
         return Crew(
             agents=self.agents,
             tasks=[
-                self.research_task(topic),  # Pass topic to research_task
-                self.reporting_task(topic)   # Pass topic to reporting_task
+                self.research_task(),  # Pass topic to research_task
+                self.reporting_task()   # Pass topic to reporting_task
             ],
             process=Process.sequential,
             verbose=True

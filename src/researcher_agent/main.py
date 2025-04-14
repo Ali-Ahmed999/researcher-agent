@@ -20,8 +20,8 @@ class ExampleFlow(Flow):
     @listen(start_researcher)
     def research_work(self, update_topic):
         print(f"Received topic: {update_topic}")  # Debugging line to check topic
-        crew = Research_Crew().crew(topic=update_topic)  # Pass topic here
-        result = crew.kickoff()  # Execute the tasks
+        crew = Research_Crew().crew()  # Pass topic here
+        result = crew.kickoff(inputs={"topic" : update_topic})  # Execute the tasks
         return result.raw
 
 def kickoff():
